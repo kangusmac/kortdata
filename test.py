@@ -1,7 +1,6 @@
 from kalender import kalender, datoer_i_måned
 import streamlit as st
 from datetime import datetime
-from streamlit_calendar import calendar
 from sommerhuse import SOMMERHUSE, mygeodata
 from streamlit_folium import st_folium
 import folium

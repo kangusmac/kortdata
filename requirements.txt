@@ -1,1 +1,4 @@
+folium==0.16.0
 pandas==2.2.1
+streamlit==1.32.1
+streamlit_folium==0.18.0
