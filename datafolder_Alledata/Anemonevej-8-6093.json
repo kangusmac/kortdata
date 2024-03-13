@@ -1,0 +1,46 @@
+{
+    "Beholder": "1 stk. 240 L 2-delt beholder til rest og madaffald, Cont. nr. 28",
+    "Tømmeordning": "19 uger Mandag - Ulige uger (Se tømmekalender)",
+    "Placering": "Anemonevej 8, 6093",
+    "Datoer": {
+        "feb": [
+            "12",
+            "26"
+        ],
+        "mar": [
+            "23"
+        ],
+        "apr": [
+            "8"
+        ],
+        "maj": [
+            "6",
+            "21"
+        ],
+        "jun": [
+            "3",
+            "17"
+        ],
+        "jul": [
+            "1",
+            "15",
+            "29"
+        ],
+        "aug": [
+            "12",
+            "26"
+        ],
+        "sep": [
+            "9",
+            "23"
+        ],
+        "okt": [
+            "7",
+            "21"
+        ],
+        "dec": [
+            "16",
+            "30"
+        ]
+    }
+}
