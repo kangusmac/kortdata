@@ -29,6 +29,43 @@ class Måneder(Enum):
         except KeyError:
             raise ValueError()
     
+    @classmethod
+    def from_value(cls, value):
+        try:
+            return cls(value)
+        except KeyError:
+            raise ValueError()
+    
+    class MånedException(Exception):
+        pass
+    
+    class Dansk(Enum):
+        jan = "Januar"
+        feb = "Februar"
+        mar = "Marts"
+        apr = "April"
+        maj = "Maj"
+        jun = "Juni"
+        jul = "Juli"
+        aug = "August"
+        sep = "September"
+        okt = "Oktober"
+        nov = "November"
+        dec = "December"
+
+        @classmethod
+        def from_string(cls, string):
+            try:
+                return cls[string.lower()]
+            except KeyError:
+                raise ValueError()
+        
+        @classmethod
+        def from_value(cls, value):
+            try:
+                return cls(value)
+            except KeyError:
+                raise ValueError()
 
 
 # Create an enum class that translates the english weekday names to danish
@@ -47,6 +84,15 @@ class Ugedage(Enum):
             return cls[string]
         except KeyError:
             raise ValueError()
+        
+    @classmethod
+    def from_value(cls, value):
+        try:
+            return cls(value)
+        except KeyError:
+            raise ValueError()
+        
+    
 
 #oversættelse = { "jan" : "Jan", "feb" : "February", "mar" : "March", "apr" : "April", "may" : "maj"
         
@@ -84,28 +130,36 @@ def hent_dato(måned):
 
 def  kalender(måned=None):
     if måned is None:
-        current_month = datetime.now().strftime('%b').lower()
+        current_month = datetime.now().strftime('%m').lower()
+        current_month = int(current_month)
+        current_month = Måneder.from_value(current_month).name
     else:
         current_month = måned
-    mym = hent_dato(SOMMERHUSE[current_month])
-    mym = pd.DataFrame(mym)
-    mym = mym.reset_index()
-    mym.columns = ["Henvisning","Dato"]
-    mym["Dato"] = pd.to_datetime(mym["Dato"], format='%d %m %Y')
-    mym["Ugedag"] = mym["Dato"].dt.day_name()
-    #mym["Ugedag"] = mym["Ugedag"].apply(lambda x: Ugedage.from_string(x).value)
-    mym_gr = mym.groupby(["Dato","Henvisning"]).count()
-    mymidx = mym_gr.index.unique(level=0)
-    mymholder = []
-    for d in mymidx:
+    try:
+        mym = hent_dato(SOMMERHUSE[current_month])
+    except KeyError:
+        raise Måneder.MånedException(f"Der er ingen data for måneden {current_month}")
+    else:
+    #mym = hent_dato(SOMMERHUSE[current_month])
 
-        df = SOMMERHUSE.loc[mym_gr.loc[(d,)].index]['Placering']
-        df = df.reset_index()
+        mym = pd.DataFrame(mym)
+        mym = mym.reset_index()
+        mym.columns = ["Henvisning","Dato"]
+        mym["Dato"] = pd.to_datetime(mym["Dato"], format='%d %m %Y')
+        mym["Ugedag"] = mym["Dato"].dt.day_name()
+    #mym["Ugedag"] = mym["Ugedag"].apply(lambda x: Ugedage.from_string(x).value)
+        mym_gr = mym.groupby(["Dato","Henvisning"]).count()
+        mymidx = mym_gr.index.unique(level=0)
+        mymholder = []
+        for d in mymidx:
+
+            df = SOMMERHUSE.loc[mym_gr.loc[(d,)].index]['Placering']
+            df = df.reset_index()
         #df.drop(columns="Henvisning", inplace=True)
-        df['Dato'] = d
+            df['Dato'] = d
     
-        mymholder.append(df)
-    return mymholder
+            mymholder.append(df)
+        return mymholder
 
 def datoer_i_måned(måned=None):
     måned = kalender(måned)
